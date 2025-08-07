@@ -10,7 +10,7 @@ const Slider = ({ title, data, categoria }) => {
   const navigate = useNavigate();
 
   // const BASE_URL = import.meta.env.VITE_PUBLIC_BASE || "http://localhost:4000";
-  const BASE_URL = import.meta.env.VITE_PUBLIC_BASE || "https://backend-megamadera.onrender.com";
+  const BASE_URL = import.meta.env.VITE_PUBLIC_BASE || "http://backend-megamadera.onrender.com";
 
   useEffect(() => {
     const checkScroll = () => {

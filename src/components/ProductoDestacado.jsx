@@ -15,8 +15,8 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
   const imagenes = Array.isArray(producto.imagenes) ? producto.imagenes : [];
 
   const buildImageUrl = (imgPath) => {
-    // const base = import.meta.env.VITE_PUBLIC_BASE || "http://localhost:4000";
-    const base = import.meta.env.VITE_PUBLIC_BASE || "https://backend-megamadera.onrender.com";
+    const base = import.meta.env.VITE_PUBLIC_BASE || "http://localhost:4000";
+    // const base = import.meta.env.VITE_PUBLIC_BASE || "http://backend-megamadera.onrender.com";
     
     if (!imgPath.includes("/")) {
       return `${base}/products/${producto.ruta}/${imgPath}`;

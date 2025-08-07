@@ -1,0 +1,3807 @@
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\esquema.txt:
+
+Esquema front-end:
+
+📁 Proyecto Herrajes (Front-end)
+│
+├── 📁 public
+│
+├── 📁 src
+│    │
+│    ├── 📁 api
+│    │    └── api.js
+│    │
+│    ├── 📁 assets
+│    │    ├── 📁 background
+│    │    ├── 📁 cardHome
+│    │    ├── 📁 icons
+│    │    ├── 📁 logo
+│    │    └── 📁 products
+│    │         ├── 📁 herrajes
+│    │         ├── 📁 melaminas
+│    │         ├── 📁 muebles
+│    │         ├── 📁 revestimientos
+│    │         ├── 📁 simulador
+│    │         └── 📁 vinilos
+│    │
+│    ├── 📁 components
+│    │    ├── 📁 cards
+│    │    │    └── CardHome.jsx
+│    │    │
+│    │    ├── 📁 layout
+│    │    │    ├── 📁 navbar
+│    │    │    ├── Footer.jsx
+│    │    │    └── Header.jsx
+│    │    │
+│    │    ├── 📁 policies
+│    │    │    ├── Cookies.jsx
+│    │    │    ├── Privacidad.jsx
+│    │    │    └── Terminos.jsx
+│    │    │
+│    │    ├── 📁 ui
+│    │    │    ├── Banner.jsx
+│    │    │    ├── Carrusel.jsx
+│    │    │    └── Slider.jsx
+│    │    └── ProductoDestacado.jsx
+│    │
+│    ├── 📁 data
+│    │    ├── 📁 components
+│    │    │    └── cursor.jsx
+│    │    │
+│    │    ├── 📁 image
+│    │    │    └── gestorImage.js
+│    │    │
+│    │    └── 📁 pages
+│    │         ├── contactos.js
+│    │         └── home.js
+│    │
+│    ├── 📁 pages
+│    │    ├── contactos.jsx
+│    │    ├── herrajes.jsx
+│    │    ├── home.jsx
+│    │    ├── melaminas.jsx
+│    │    ├── revestimientos.jsx
+│    │    ├── simulador.jsx
+│    │    └── vinilos.jsx
+│    │
+│    ├── 📁 styles
+│    │    ├── breakpoints.js
+│    │    └── globalStyles.js
+│    │
+│    ├── App.jsx
+│    └── main.jsx
+│
+├── .gitignore
+├── eslint.config.js
+├── esquema.txt
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+├── vercel.json
+└── vite.config.js
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\api\api.js:
+
+import axios from 'axios';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
+export const getHerrajes = () => axios.get(`${API_BASE}/herrajes`);
+export const getMelaminas = () => axios.get(`${API_BASE}/melaminas`);
+export const getRevestimientos = () => axios.get(`${API_BASE}/revestimientos`);
+export const getRevestimientosNormalizados = () => axios.get(`${API_BASE}/revestimientos/normalizado`);
+export const getTodosLosProductos = () => axios.get(`${API_BASE}/productos-todos`);
+
+export { API_BASE };
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\cards\CardHome.jsx:
+
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { breakpoints } from "@/styles/breakpoints";
+
+const CardHome = ({ name, image, page }) => {
+  return (
+    <CardLink to={page}>
+      <CardContainer>
+        <CardImage src={image} alt={name} />
+        <CardOverlay />
+        <CardTitle>{name}</CardTitle>
+      </CardContainer>
+    </CardLink>
+  );
+};
+
+export default CardHome;
+
+// 📐 styled-components
+
+const CardLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  max-width: 300px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    max-width: 250px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+`;
+
+const CardContainer = styled.div`
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* cuadrado por defecto */
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f8f8f8;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding-top: 56.25%; /* 16:9 rectangular en mobile */
+  }
+`;
+
+const CardImage = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+
+  ${CardContainer}:hover & {
+    transform: scale(1.05);
+  }
+`;
+
+const CardOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.25) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+`;
+
+const CardTitle = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  padding: 0.7rem;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1rem;
+  }
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\layout\navbar\Navbar.jsx:
+
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import data from "@/data/pages/home";
+
+const NavbarContainer = styled.nav`
+  display: flex;
+  gap: 1rem;
+
+  a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background 0.3s ease, color 0.3s ease;
+    color: #333;
+    text-decoration: none;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &.active {
+      color: #0066cc;
+      font-weight: 600;
+      border-bottom: 2px solid #0066cc;
+      background: transparent;
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const Navbar = () => {
+  const location = useLocation();
+  const secciones = Object.values(data.secciones);
+
+  return (
+    <NavbarContainer>
+      {secciones.map((sec) => (
+        <Link
+          key={sec.id}
+          to={sec.page}
+          className={location.pathname === sec.page ? "active" : ""}
+        >
+          {sec.name}
+        </Link>
+      ))}
+    </NavbarContainer>
+  );
+};
+
+export default Navbar;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\layout\Footer.jsx:
+
+import styled from "styled-components";
+
+const Footer = () => {
+  return (
+    <Container>
+      <Content>
+        <Logo>Mega Madera</Logo>
+
+        <Columns>
+          <Column>
+            <Title>Dirección</Title>
+            <Item>Av. Moreno 1455</Item>
+            <Item>San Rafael, Mendoza, Argentina</Item>
+          </Column>
+
+          <Column>
+            <Title>Contacto</Title>
+            <Item>Tel: +54 260422505</Item>
+            <Item>Email: contacto@megamadera.com</Item>
+          </Column>
+
+          <Column>
+            <Title>Horario</Title>
+            <Item>Lunes a Viernes: 8:00 a 12:30 / 16:00 a 20:30</Item>
+            <Item>Sábados: 8:00 a 13:00</Item>
+          </Column>
+        </Columns>
+
+        <Copy>
+          &copy; {new Date().getFullYear()} Mega Madera · Todos los derechos reservados.
+        </Copy>
+      </Content>
+    </Container>
+  );
+};
+
+export default Footer;
+
+const Container = styled.footer`
+  background: #121212;
+  color: #eee;
+  padding: 3rem 1.5rem;
+`;
+
+const Content = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+`;
+
+const Logo = styled.h1`
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #f5c518;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 2.2rem;
+  }
+`;
+
+const Columns = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+`;
+
+const Column = styled.div`
+  max-width: 300px;
+`;
+
+const Title = styled.h4`
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #f5c518;
+  font-weight: 600;
+`;
+
+const Item = styled.p`
+  font-size: 1rem;
+  margin: 0.25rem 0;
+  color: #ccc;
+  line-height: 1.6;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const Copy = styled.div`
+  font-size: 0.95rem;
+  color: #888;
+  text-align: center;
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\layout\Header.jsx:
+
+import React, { useState, useEffect, useRef } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
+import Navbar from "@/components/layout/navbar/Navbar";
+import data from "@/data/pages/home";
+import contactos from "@/data/pages/contactos";
+
+const HeaderWrapper = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: ${({ $isVisible }) => ($isVisible ? "translateY(0)" : "translateY(-100%)")};
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+`;
+
+const HeaderInner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    padding: 0.6rem 1rem;
+  }
+`;
+
+const Logo = styled.img`
+  width: 50px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+const ToggleButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+const SideMenu = styled.nav`
+  position: fixed;
+  top: 0;
+  right: ${({ $open }) => ($open ? "0" : "-300px")};
+  height: 100vh;
+  width: 250px;
+  background-color: #fff;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 1100;
+
+  @media (max-width: 500px) {
+    width: 80%;
+    padding: 1.5rem 1rem;
+  }
+`;
+
+const MenuItem = styled(Link)`
+  padding: 12px 16px;
+  font-size: 1rem;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  align-self: flex-end;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+`;
+
+const Header = () => {
+  const [navVisible, setNavVisible] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const hideTimeout = useRef(null);
+  const showTimeout = useRef(null);
+
+  const secciones = Object.values(data.secciones);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+  const startHideTimer = () => {
+    if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    hideTimeout.current = setTimeout(() => {
+      setNavVisible(false);
+    }, 3000);
+  };
+
+  const startHideAfterShow = () => {
+    if (showTimeout.current) clearTimeout(showTimeout.current);
+    showTimeout.current = setTimeout(() => {
+      setNavVisible(false);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    startHideTimer();
+    return () => {
+      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+      if (showTimeout.current) clearTimeout(showTimeout.current);
+    };
+  }, []);
+
+  const handleMouseEnterTop = () => {
+    if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    if (showTimeout.current) clearTimeout(showTimeout.current);
+    setNavVisible(true);
+    startHideAfterShow();
+  };
+
+  return (
+    <>
+      <HoverTrigger onMouseEnter={handleMouseEnterTop} />
+      <HeaderWrapper $isVisible={navVisible}>
+        <HeaderInner>
+          <Link to="/">
+            <Logo src={contactos.logo} alt="Logo Mega Madera" />
+          </Link>
+          <Navbar />
+          <ToggleButton onClick={toggleMenu}>
+            <MenuIcon size={28} />
+          </ToggleButton>
+        </HeaderInner>
+
+        <SideMenu $open={menuOpen}>
+          <CloseButton onClick={toggleMenu}>
+            <CloseIcon size={28} />
+          </CloseButton>
+          {secciones.map((sec) => (
+            <MenuItem key={sec.id} to={sec.page} onClick={toggleMenu}>
+              {sec.name}
+            </MenuItem>
+          ))}
+        </SideMenu>
+      </HeaderWrapper>
+    </>
+  );
+};
+
+const HoverTrigger = styled.div`
+  position: fixed;
+  top: 0;
+  height: 12px;
+  width: 100%;
+  z-index: 999;
+`;
+
+export default Header;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\policies\Cookies.jsx:
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+// Contenedor principal de la página
+const Container = styled.div`
+  padding: 30px;
+  max-width: 900px;
+  margin: 40px auto;
+  background: rgba(0, 0, 0, 0.7); /* Fondo oscuro y semi-translúcido */
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+  font-family: 'Montserrat', sans-serif; /* Fuente global */
+  color: var(--text-color);
+  line-height: 1.6;
+  backdrop-filter: blur(10px); /* Efecto de desenfoque */
+`;
+
+// Título de la política de cookies
+const Title = styled.h1`
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--text-color); /* Color global */
+  text-align: center;
+  text-shadow: var(--shadow); /* Sombra global */
+`;
+
+// Estilos para cada sección de la política de cookies
+const Section = styled.section`
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--text-color); /* Color global */
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 15px;
+  }
+`;
+
+// Botón de regreso a la página principal
+const BackButton = styled(Link)`
+  display: inline-block;
+  padding: 12px 24px;
+  margin-top: 30px;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  backdrop-filter: blur(10px); /* Desenfoque para dar un toque sutil */
+
+  &:hover {
+    background-color: #fff;
+    color: #000;
+    transform: scale(1.05); /* Efecto de escala en hover */
+  }
+`;
+
+// Enlaces adicionales a otras políticas
+const NavLinks = styled.nav`
+  margin-top: 30px;
+  text-align: center;
+
+  a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--hover-text-color);
+    }
+  }
+`;
+
+// Componente de Política de Cookies
+const Cookies = () => {
+  return (
+    <Container>
+      <Title>Política de Cookies</Title>
+      
+      <Section>
+        <h2>1. ¿Qué son las Cookies?</h2>
+        <p>
+          Las cookies son pequeños archivos de texto que se colocan en su dispositivo cuando visita nuestro sitio web. Se utilizan para mejorar su experiencia en el sitio.
+        </p>
+        
+        <h2>2. Tipos de Cookies que Utilizamos</h2>
+        <p>
+          Utilizamos cookies para recordar sus preferencias, analizar el tráfico del sitio y mejorar la funcionalidad del sitio web. Esto incluye cookies de sesión y cookies persistentes.
+        </p>
+        
+        <h2>3. Cómo Puede Controlar las Cookies</h2>
+        <p>
+          Puede controlar y gestionar las cookies a través de la configuración de su navegador. Sin embargo, tenga en cuenta que deshabilitar las cookies puede afectar la funcionalidad del sitio web.
+        </p>
+        
+        <h2>4. Modificaciones</h2>
+        <p>
+          Podemos actualizar esta política de cookies en cualquier momento. Los cambios se publicarán en esta página.
+        </p>
+        <p>Última actualización: [Fecha]</p>
+      </Section>
+      
+      <BackButton to="/">Volver a la página principal</BackButton>
+      
+      <NavLinks>
+        <Link to="/terminos">Términos y Condiciones</Link> | 
+        <Link to="/privacidad">Política de Privacidad</Link>
+      </NavLinks>
+    </Container>
+  );
+};
+
+export default Cookies;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\policies\Privacidad.jsx:
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+// Contenedor principal de la página de privacidad
+const Container = styled.div`
+  padding: 30px;
+  max-width: 900px;
+  margin: 40px auto;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  backdrop-filter: blur(10px);
+`;
+
+// Título de la página
+const Title = styled.h1`
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--text-color);
+  text-align: center;
+  text-shadow: var(--shadow);
+`;
+
+// Estilo para las secciones de contenido
+const Section = styled.section`
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 1.6rem;
+    color: var(--text-color);
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 15px;
+  }
+`;
+
+// Botón de regreso a la página principal
+const BackButton = styled(Link)`
+  display: inline-block;
+  padding: 12px 24px;
+  margin-top: 30px;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background-color: #fff;
+    color: #000;
+    transform: scale(1.05);
+  }
+`;
+
+// Enlaces adicionales a otras políticas
+const NavLinks = styled.nav`
+  margin-top: 30px;
+  text-align: center;
+
+  a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--hover-text-color);
+    }
+  }
+`;
+
+// Componente de Política de Privacidad
+const Privacidad = () => (
+  <Container>
+    <Title>Política de Privacidad</Title>
+    
+    <Section>
+      <h2>1. Información que Recopilamos</h2>
+      <p>
+        Recopilamos información personal que usted nos proporciona al usar nuestro sitio web, como nombre y correo electrónico.
+      </p>
+
+      <h2>2. Cómo Usamos su Información</h2>
+      <p>
+        Usamos su información para mejorar nuestros servicios y comunicarnos sobre actualizaciones.
+      </p>
+
+      <h2>3. Seguridad</h2>
+      <p>
+        Implementamos medidas de seguridad para proteger su información, aunque no podemos garantizar seguridad absoluta.
+      </p>
+
+      <h2>4. Modificaciones</h2>
+      <p>
+        Podemos actualizar esta política en cualquier momento. Los cambios se publicarán en esta página.
+      </p>
+      <p>Última actualización: [Fecha]</p>
+    </Section>
+
+    <BackButton to="/">Volver a la página principal</BackButton>
+
+    <NavLinks>
+      <Link to="/terminos">Términos y Condiciones</Link> | 
+      <Link to="/cookies">Política de Cookies</Link>
+    </NavLinks>
+  </Container>
+);
+
+export default Privacidad;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\policies\Terminos.jsx:
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+// Contenedor principal de la página de términos
+const Container = styled.div`
+  padding: 30px;
+  max-width: 900px;
+  margin: 40px auto;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  backdrop-filter: blur(10px);
+`;
+
+// Título de la página
+const Title = styled.h1`
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--text-color);
+  text-align: center;
+  text-shadow: var(--shadow);
+`;
+
+// Estilo para cada sección del contenido
+const Section = styled.section`
+  margin-bottom: 40px;
+
+  h2 {
+    font-size: 1.6rem;
+    color: var(--text-color);
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 15px;
+  }
+`;
+
+// Botón de regreso a la página principal
+const BackButton = styled(Link)`
+  display: inline-block;
+  padding: 12px 24px;
+  margin-top: 30px;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background-color: #fff;
+    color: #000;
+    transform: scale(1.05);
+  }
+`;
+
+// Enlaces a otras políticas
+const NavLinks = styled.nav`
+  margin-top: 30px;
+  text-align: center;
+
+  a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--hover-text-color);
+    }
+  }
+`;
+
+// Componente de Términos y Condiciones
+const Terminos = () => (
+  <Container>
+    <Title>Términos y Condiciones</Title>
+    
+    <Section>
+      <h2>1. Aceptación de los Términos</h2>
+      <p>
+        Al utilizar nuestro sitio, acepta estos términos y condiciones en su totalidad.
+      </p>
+
+      <h2>2. Uso del Sitio Web</h2>
+      <p>
+        Debe usar el sitio de acuerdo con la ley y estos términos. No debe dañar el sitio web.
+      </p>
+
+      <h2>3. Propiedad Intelectual</h2>
+      <p>
+        Todo el contenido del sitio web es propiedad de [Su Empresa] y está protegido por leyes de propiedad intelectual.
+      </p>
+
+      <h2>4. Limitación de Responsabilidad</h2>
+      <p>
+        No somos responsables de ningún daño resultante del uso del sitio web.
+      </p>
+
+      <h2>5. Modificaciones</h2>
+      <p>
+        Nos reservamos el derecho de modificar estos términos en cualquier momento.
+      </p>
+      <p>Última actualización: [Fecha]</p>
+    </Section>
+
+    <BackButton to="/">Volver a la página principal</BackButton>
+
+    <NavLinks>
+      <Link to="/privacidad">Política de Privacidad</Link> | 
+      <Link to="/cookies">Política de Cookies</Link>
+    </NavLinks>
+  </Container>
+);
+
+export default Terminos;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\ui\Banner.jsx:
+
+import React, { useState, useEffect, useMemo } from "react";
+import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
+import data from "@/data/pages/home";
+import { breakpoints } from "@/styles/breakpoints";
+
+const Banner = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const sections = useMemo(() => Object.values(data.secciones), []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % sections.length);
+    }, 6000);
+
+    return () => clearInterval(intervalId);
+  }, [sections.length]);
+
+  const currentSection = sections[currentIndex];
+
+  return (
+    <BannerContainer>
+      <ImageWrapper>
+        {sections.map((section, idx) => (
+          <BannerImage
+            key={idx}
+            src={section.background}
+            alt={section.name}
+            $active={idx === currentIndex}
+            loading="lazy"
+          />
+        ))}
+        <Overlay />
+      </ImageWrapper>
+
+      <Content>
+        <Title>{currentSection.name}</Title>
+        <Description>
+          {currentSection.description?.trim()
+            ? currentSection.description
+            : `Descubre lo mejor de nuestra colección en ${currentSection.name}. Explora ahora y transforma tus espacios.`}
+        </Description>
+        <StyledButton
+          to={currentSection.page}
+          aria-label={`Ir a ${currentSection.name}`}
+        >
+          Explorar {currentSection.name}
+        </StyledButton>
+      </Content>
+    </BannerContainer>
+  );
+};
+
+export default Banner;
+
+// 📐 styled-components
+
+const BannerContainer = styled.section`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  flex: 2;
+  overflow: hidden;
+  min-height: 300px;
+`;
+
+const BannerImage = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+
+  ${({ $active }) =>
+    $active &&
+    css`
+      opacity: 1;
+    `}
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.5) 10%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0) 90%
+  );
+  z-index: 1;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  z-index: 2;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f9f9f9;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 2rem;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 3rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 1rem 0;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 2.5rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 2rem;
+  }
+`;
+
+const Description = styled.p`
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 600px;
+  margin-bottom: 2rem;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 1rem;
+  }
+`;
+
+const StyledButton = styled(Link)`
+  display: inline-block;
+  width: fit-content;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #222;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: #444;
+  }
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\ui\Carrusel.jsx:
+
+// Carrusel.jsx
+import React from "react";
+import styled, { keyframes } from "styled-components";
+import data from "@/data/pages/contactos";
+import GlobalStyle from "@/styles/globalStyles";
+
+// Animación de desplazamiento infinito
+const scroll = keyframes`
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+`;
+
+const CarouselContainer = styled.div`
+  display: inline-block;
+  align-content: center;
+  width: 100vw;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+`;
+
+const CarouselInner = styled.div`
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  width: max-content;
+  animation: ${scroll} 10s linear infinite; /* Ajusta la velocidad según sea necesario */
+`;
+
+const Message = styled.div`
+  display: flex;
+  align-items: center;
+
+  font-size: 4.5rem;
+  white-space: nowrap;
+  color: var(--text-color);
+  padding-right: 3rem; /* Espacio justo para que las letras no se peguen */
+  font-weight: bold;
+`;
+
+const LogoImage = styled.img`
+  height: 70px;
+  margin: 0 5px;
+  vertical-align: middle;
+`;
+
+const Carrusel = () => {
+  const nombreEmpresa = data.nombreEmpresa;
+  const logoImage = data.logo;
+
+  const renderNombreEmpresa = () => {
+    return nombreEmpresa
+      .split("")
+      .map((char, index) =>
+        char === "M" ? (
+          <LogoImage key={index} src={logoImage} alt="Logo" />
+        ) : (
+          <span key={index}>{char}</span>
+        )
+      );
+  };
+
+  return (
+    <CarouselContainer>
+      <GlobalStyle />
+      <CarouselInner>
+        {/* Repetimos el contenido suficiente para evitar cortes visibles */}
+        {[...Array(4)].map((_, i) => (
+          <Message key={i}>{renderNombreEmpresa()}</Message>
+        ))}
+      </CarouselInner>
+    </CarouselContainer>
+  );
+};
+
+export default Carrusel;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\ui\Slider.jsx:
+
+import React, { useRef } from "react";
+import styled from "styled-components";
+import { breakpoints } from "@/styles/breakpoints";
+import { API_BASE } from "@/api/api";
+import { useNavigate } from "react-router-dom";
+
+const defaultBuildImagePath = (categoria, nombreImagen, titulo) => {
+  let path = "";
+
+  if (titulo.toLowerCase().includes("herrajes")) {
+    path = `herrajes/${categoria.toLowerCase().replace(/\s+/g, "-")}/${nombreImagen.trim()}`;
+  } else if (titulo.toLowerCase().includes("melaminas")) {
+    path = `melaminas/${nombreImagen.trim()}`;
+  } else if (titulo.toLowerCase().includes("revestimientos")) {
+    const partes = categoria
+      .split(" - ")
+      .map((s) => s.replace(/-/g, " ").trim());
+    const ruta = partes.join("/");
+    path = `revestimientos/pared/${ruta}/${nombreImagen.trim()}`;
+  }
+
+  return `${API_BASE.replace("/api", "")}/products/${path}`;
+};
+
+const Slider = ({
+  titulo = "Productos",
+  data = [],
+  categoriaKey = "nombre",
+  productosKey = "productos",
+  buildImagePath,
+  onLoadMore,
+}) => {
+  const carruselRef = useRef(null);
+  const navigate = useNavigate();
+
+  const scroll = (dir) => {
+    if (!carruselRef.current) return;
+
+    const carrusel = carruselRef.current;
+    const step = carrusel.clientWidth * 0.8;
+
+    if (
+      dir === "right" &&
+      carrusel.scrollLeft + carrusel.clientWidth >= carrusel.scrollWidth - 50
+    ) {
+      onLoadMore?.();
+    }
+
+    carrusel.scrollBy({
+      left: dir === "left" ? -step : step,
+      behavior: "smooth",
+    });
+  };
+
+  const imagenes = [];
+
+  data.forEach((item) => {
+    const categoriaNombre = item[categoriaKey] || "otros";
+    const productos = Array.isArray(item[productosKey])
+      ? item[productosKey]
+      : [item];
+
+    productos.forEach((prod) => {
+      const imgs = Array.isArray(prod.imagenes)
+        ? prod.imagenes
+        : prod.imagen
+        ? [prod.imagen]
+        : [];
+
+      imgs.forEach((img) => {
+        let url = "";
+
+        if (img.startsWith("/products/")) {
+          url = `${API_BASE.replace("/api", "")}${img}`;
+        } else {
+          url = buildImagePath
+            ? buildImagePath(categoriaNombre, img, titulo)
+            : defaultBuildImagePath(categoriaNombre, img, titulo);
+        }
+
+        imagenes.push({
+          url,
+          alt: prod.nombre || "Producto",
+          producto: prod,
+          categoria: categoriaNombre,
+        });
+      });
+    });
+  });
+
+  if (!imagenes.length) {
+    return <SliderWrapper>No hay imágenes para mostrar.</SliderWrapper>;
+  }
+
+  const irADetalle = (producto) => {
+    const nombre = encodeURIComponent(producto.nombre);
+    let pagina = "";
+
+    if (titulo.toLowerCase().includes("melaminas")) {
+      pagina = "/melaminas";
+    } else if (titulo.toLowerCase().includes("herrajes")) {
+      pagina = "/herrajes";
+    } else if (titulo.toLowerCase().includes("revestimientos")) {
+      pagina = "/revestimientos";
+    }
+
+    navigate(`${pagina}?nombre=${nombre}`);
+  };
+
+  return (
+    <SliderWrapper>
+      <Header>
+        <Titulo>{titulo}</Titulo>
+        <NavButtons>
+          <Btn onClick={() => scroll("left")} aria-label="Desplazar a la izquierda">
+            ⟨
+          </Btn>
+          <Btn onClick={() => scroll("right")} aria-label="Desplazar a la derecha">
+            ⟩
+          </Btn>
+        </NavButtons>
+      </Header>
+
+      <CarruselContainer>
+        <Carrusel ref={carruselRef} role="list">
+          {imagenes.map((img, idx) => (
+            <Card
+              key={idx}
+              onClick={() => irADetalle(img.producto)}
+              role="listitem"
+            >
+              <Imagen src={img.url} alt={img.alt} />
+              <Nombre>{img.alt}</Nombre>
+            </Card>
+          ))}
+        </Carrusel>
+      </CarruselContainer>
+    </SliderWrapper>
+  );
+};
+
+export default Slider;
+
+// 🎨 Estilos
+
+const SliderWrapper = styled.section`
+  width: 100%;
+  margin: 3rem 0;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  margin-bottom: 1rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+`;
+
+const Titulo = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 1.6rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+`;
+
+const NavButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const Btn = styled.button`
+  background: #f5c518;
+  color: #222;
+  border: none;
+  border-radius: 4px;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    background: #e0b814;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+const CarruselContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  padding: 0 0.5rem;
+`;
+
+const Carrusel = styled.div`
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scroll-behavior: smooth;
+`;
+
+const Card = styled.article`
+  flex: 0 0 auto;
+  width: 180px;
+  scroll-snap-align: center;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 150px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 120px;
+  }
+`;
+
+const Imagen = styled.img`
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    height: 110px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: 90px;
+  }
+`;
+
+const Nombre = styled.p`
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 0.8rem;
+  }
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\components\ProductoDestacado.jsx:
+
+import React, { useState } from "react";
+import styled from "styled-components";
+import { breakpoints } from "@/styles/breakpoints";
+
+const ProductoDestacado = ({
+  producto,
+  categoria = "",
+  path = "",
+  construirRutaImagen,
+}) => {
+  const [imagenActiva, setImagenActiva] = useState(0);
+  const imagenes = Array.isArray(producto.imagenes) ? producto.imagenes : [];
+
+  let imagenSrc = "";
+  if (construirRutaImagen) {
+    if (categoria || path) {
+      imagenSrc = construirRutaImagen(
+        imagenes[imagenActiva],
+        categoria || path
+      );
+    } else {
+      imagenSrc = construirRutaImagen(imagenes[imagenActiva]);
+    }
+  }
+
+  return (
+    <Destacado>
+      <Titulo>Producto destacado</Titulo>
+      <Card>
+        {imagenSrc && (
+          <Imagen src={imagenSrc} alt={producto.nombre} />
+        )}
+        <Info>
+          <Nombre>{producto.nombre}</Nombre>
+          <Descripcion>{producto.descripcion || "Sin descripción"}</Descripcion>
+        </Info>
+
+        {imagenes.length > 1 && (
+          <Miniaturas>
+            {imagenes.map((img, idx) => {
+              const miniaturaSrc =
+                categoria || path
+                  ? construirRutaImagen(img, categoria || path)
+                  : construirRutaImagen(img);
+
+              return (
+                <Miniatura
+                  key={idx}
+                  src={miniaturaSrc}
+                  alt={`Vista ${idx + 1} de ${producto.nombre}`}
+                  onClick={() => setImagenActiva(idx)}
+                  $activa={idx === imagenActiva}
+                />
+              );
+            })}
+          </Miniaturas>
+        )}
+      </Card>
+    </Destacado>
+  );
+};
+
+export default ProductoDestacado;
+
+// 🎨 styled-components
+
+const Destacado = styled.section`
+  margin: 1rem auto;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0.8rem;
+  }
+`;
+
+const Titulo = styled.h2`
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.4rem;
+  }
+`;
+
+const Card = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Imagen = styled.img`
+  max-width: 100%;
+  max-height: 50vh;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: ${breakpoints.tablet}) {
+    max-height: 40vh;
+  }
+`;
+
+const Info = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const Nombre = styled.h3`
+  font-size: 1.4rem;
+  font-weight: 600;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.2rem;
+  }
+`;
+
+const Descripcion = styled.p`
+  font-size: 1rem;
+  color: #555;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 0.95rem;
+  }
+`;
+
+const Miniaturas = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+`;
+
+const Miniatura = styled.img`
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 2px solid ${(props) => (props.$activa ? "#000" : "#ccc")};
+  cursor: pointer;
+  transition: border 0.3s ease;
+
+  &:hover {
+    border-color: #333;
+  }
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\data\components\cursor.jsx:
+
+import { useEffect, useState } from "react";
+import styled, { keyframes, createGlobalStyle, css } from "styled-components";
+import contactos from "@/data/pages/contactos";
+
+// Animación de rotación
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+// Estilo del cursor
+const CustomCursor = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  width: ${({ hovered }) => (hovered ? "32px" : "24px")};
+  height: ${({ hovered }) => (hovered ? "32px" : "24px")};
+  transition: width 0.2s ease, height 0.2s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: ${({ rotating }) =>
+      rotating
+        ? css`${spin} 1s linear infinite`
+        : "none"};
+  }
+`;
+
+// Ocultar cursor nativo — global para todos los elementos
+const GlobalStyle = createGlobalStyle`
+  body, a, button, * {
+    cursor: none !important;
+  }
+`;
+
+const Cursor = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [rotating, setRotating] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  let stopTimeout;
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+      setRotating(true);
+
+      clearTimeout(stopTimeout);
+      stopTimeout = setTimeout(() => {
+        setRotating(false);
+      }, 100);
+    };
+
+    const handleMouseOver = (e) => {
+      if (e.target.closest("a, button")) {
+        setHovered(true);
+      }
+    };
+
+    const handleMouseOut = (e) => {
+      if (e.target.closest("a, button")) {
+        setHovered(false);
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("mouseout", handleMouseOut);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseover", handleMouseOver);
+      document.removeEventListener("mouseout", handleMouseOut);
+      clearTimeout(stopTimeout);
+    };
+  }, []);
+
+  return (
+    <>
+      <GlobalStyle />
+      <CustomCursor
+        style={{ left: `${position.x}px`, top: `${position.y}px` }}
+        rotating={rotating}
+        hovered={hovered}
+      >
+        <img src={contactos.logo} alt="Logo" />
+      </CustomCursor>
+    </>
+  );
+};
+
+export default Cursor;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\data\image\gestorImage.js:
+
+const logos = import.meta.glob('@/assets/logo/*', { eager: true });
+const backgrounds = import.meta.glob('@/assets/background/*', { eager: true });
+const icons = import.meta.glob('@/assets/icons/*/*.{jpg,jpeg,png}', { eager: true });
+const simuladorArchivos = import.meta.glob('@/assets/products/simulador/*.{jpg,jpeg,png}', { eager: true });
+const cards = import.meta.glob('@/assets/cardHome/*', { eager: true });
+
+// ✅ procesar simulador
+const procesadasSimulador = {};
+for (const path in simuladorArchivos) {
+  const key = path.split('/').pop().split('.')[0];
+  procesadasSimulador[key] = simuladorArchivos[path].default;
+}
+
+// ✅ procesar cards
+const procesadasCards = {};
+for (const path in cards) {
+  const key = path.split('/').pop().split('.')[0];
+  procesadasCards[key] = cards[path].default;
+}
+
+// ✅ procesar backgrounds (FONDO)
+const procesadasBackgrounds = {};
+for (const path in backgrounds) {
+  const key = path.split('/').pop().split('.')[0];
+  procesadasBackgrounds[key] = backgrounds[path].default;
+}
+
+// ✅ exportar todo
+export const imagenLogo = logos;
+export const backgroundPage = procesadasBackgrounds;
+export const CardHomeImage = procesadasCards;
+export const iconosRedes = icons;
+export const imagenesSimulador = procesadasSimulador;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\data\pages\contactos.js:
+
+import imagenLogo from "@/assets/logo/logo.png";
+
+const contactos = {
+  nombreEmpresa: "Mega Madera",
+  direccion: {
+    calle: "Av. Moreno 1455",
+    localidad: "San Rafael",
+    provincia: "Mendoza",
+    pais: "Argentina",
+  },
+  telefono: "+54 260422505",
+  correo: "contacto@megamadera.com",
+  horarios: {
+    mañana: {
+      apertura: "08:00",
+      cierre: "13:00",
+    },
+    tarde: {
+      apertura: "16:00",
+      cierre: "20:00",
+    },
+  },
+  dias: ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
+  logo: imagenLogo,
+  redesSociales: {
+    facebook: "https://facebook.com/megamadera",
+    instagram: "https://instagram.com/mega.madera",
+    whatsapp: "https://wa.me/+549260433172",
+    correoVentas: "ventas.megamadera@gmail.com",
+    GoogleMaps: "https://maps.app.goo.gl/ZKd8QbWgY8aJM6gF9"
+  },
+};
+
+export default contactos;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\data\pages\home.js:
+
+import { CardHomeImage, backgroundPage } from "@/data/image/gestorImage.js";
+
+const buildSection = ({ id, name, image, page, description = "" }) => {
+  const key = name.toLowerCase();
+  return {
+    id,
+    name,
+    description,
+    image,
+    page,
+    background: backgroundPage[key] || null,
+  };
+};
+
+const data = {
+  secciones: {
+    herrajes: buildSection({
+      id: 1,
+      name: "Herrajes",
+      image: CardHomeImage.herrajes,
+      page: "/herrajes",
+      description:
+        "La mejor selección de herrajes para muebles y construcción, con diseños modernos y alta calidad para todos tus proyectos."
+      }),
+    melaminas: buildSection({
+      id: 2,
+      name: "Melaminas",
+      image: CardHomeImage.melaminas,
+      page: "/melaminas",
+      description:
+        "Amplia variedad de melaminas en distintos colores y texturas para dar estilo y durabilidad a tus muebles."
+    }),
+    muebles: buildSection({
+      id: 3,
+      name: "Muebles",
+      image: CardHomeImage.muebles,
+      page: "/muebles",
+      description:
+        "Diseños exclusivos de muebles funcionales y estéticos para cada ambiente de tu hogar u oficina."
+    }),
+    revestimiento: buildSection({
+      id: 4,
+      name: "Revestimientos",
+      image: CardHomeImage.pisos,
+      page: "/revestimientos",
+      description:
+        "Revestimientos de pared y pisos que combinan belleza y resistencia para transformar tus espacios."
+    }),
+    simulador: buildSection({
+      id: 6,
+      name: "Simulador",
+      image: CardHomeImage.simulador,
+      page: "/simulador",
+      description:
+        "Visualiza cómo quedarán tus ambientes antes de comenzar tu proyecto con nuestro simulador interactivo."
+    }),
+    vinilos: buildSection({
+      id: 8,
+      name: "Vinilos",
+      image: CardHomeImage.vinilovidrios,
+      page: "/viniloParaVidrios",
+      description:
+        "Vinilos decorativos y funcionales para vidrios, que aportan privacidad y un toque elegante a tus ambientes."
+    }),
+    contacto: buildSection({
+      id: 9,
+      name: "Contactos",
+      image: CardHomeImage.contactos,
+      page: "/contactos",
+      description:
+        "Contáctanos para asesoramiento personalizado y resolver todas tus consultas sobre nuestros productos y servicios."
+    }),
+  },
+};
+
+export default data;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\contactos.jsx:
+
+import styled from "styled-components";
+import contactos from "@/data/pages/contactos";
+import { breakpoints } from "@/styles/breakpoints";
+
+import {
+  FaFacebook,
+  FaInstagram,
+  FaWhatsapp,
+  FaEnvelope,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+
+// 🎨 Estilos
+const Container = styled.section`
+  max-width: 1000px;
+  margin: 4rem auto;
+  padding: 3rem;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 2rem;
+  text-align: center;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 2rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 1rem;
+  }
+`;
+
+const LogoWrapper = styled.div`
+  margin-bottom: 1rem;
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    object-fit: contain;
+    background: white;
+  }
+`;
+
+const Heading = styled.h1`
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #222;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.8rem;
+  }
+`;
+
+const Address = styled.p`
+  color: #666;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 0.9rem;
+  }
+`;
+
+const InfoRow = styled.div`
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.6;
+
+  p {
+    margin: 0.3rem 0;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 0.9rem;
+  }
+`;
+
+const Section = styled.div``;
+
+const SubHeading = styled.h2`
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.1rem;
+  }
+`;
+
+const Text = styled.p`
+  color: #555;
+  font-size: 1rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 0.9rem;
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+
+  a {
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  a:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const WhatsAppButton = styled.a`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25d366;
+  color: white;
+  padding: 0.8rem 1rem;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #1ebe5d;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    bottom: 15px;
+    right: 15px;
+  }
+`;
+
+const MapaIframe = styled.iframe`
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 12px;
+  margin-top: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+`;
+
+const Contactos = () => {
+  const {
+    nombreEmpresa,
+    direccion,
+    telefono,
+    correo,
+    horarios,
+    dias,
+    logo,
+    redesSociales,
+  } = contactos;
+
+  return (
+    <>
+      <Container>
+        {logo && (
+          <LogoWrapper>
+            <img src={logo} alt={`Logo de ${nombreEmpresa}`} />
+          </LogoWrapper>
+        )}
+
+        <Heading>{nombreEmpresa}</Heading>
+
+        <Address>
+          {direccion.calle}, {direccion.localidad}, {direccion.provincia},{" "}
+          {direccion.pais}
+        </Address>
+
+        <InfoRow>
+          <p>📞 <strong>{telefono}</strong></p>
+          <p>✉️ <strong>{correo}</strong></p>
+        </InfoRow>
+
+        <Section>
+          <SubHeading>Horarios de Atención</SubHeading>
+          <Text>
+            {dias.join(", ")} de {horarios.mañana.apertura} a{" "}
+            {horarios.mañana.cierre} y de {horarios.tarde.apertura} a{" "}
+            {horarios.tarde.cierre} hs
+          </Text>
+        </Section>
+
+        <SocialLinks>
+          {redesSociales.facebook && (
+            <a href={redesSociales.facebook} target="_blank" rel="noopener noreferrer">
+              <FaFacebook size={24} color="#1877F2" />
+            </a>
+          )}
+          {redesSociales.instagram && (
+            <a href={redesSociales.instagram} target="_blank" rel="noopener noreferrer">
+              <FaInstagram size={24} color="#E4405F" />
+            </a>
+          )}
+          {redesSociales.whatsapp && (
+            <a href={redesSociales.whatsapp} target="_blank" rel="noopener noreferrer">
+              <FaWhatsapp size={24} color="#25D366" />
+            </a>
+          )}
+          {redesSociales.correoVentas && (
+            <a href={`mailto:${redesSociales.correoVentas}`}>
+              <FaEnvelope size={24} color="#EA4335" />
+            </a>
+          )}
+          {redesSociales.GoogleMaps && (
+            <a href={redesSociales.GoogleMaps} target="_blank" rel="noopener noreferrer">
+              <FaMapMarkerAlt size={24} color="#EA4335" />
+            </a>
+          )}
+        </SocialLinks>
+
+        {redesSociales.GoogleMaps && (
+          <MapaIframe
+            src="https://maps.google.com/maps?q=Av.%20Moreno%201455%2C%20San%20Rafael%2C%20Mendoza%2C%20Argentina&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        )}
+      </Container>
+
+      {redesSociales.whatsapp && (
+        <WhatsAppButton
+          href={redesSociales.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaWhatsapp size={20} />
+          WhatsApp
+        </WhatsAppButton>
+      )}
+    </>
+  );
+};
+
+export default Contactos;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\herrajes.jsx:
+
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getHerrajes } from "@/api/api.js";
+import ProductoDestacado from "@/components/ProductoDestacado.jsx";
+import { breakpoints } from "@/styles/breakpoints";
+
+const construirRutaImagen = (imagen, categoria) => {
+  if (!imagen || !categoria) return "";
+  const fileName = imagen.split("/").pop();
+  return `http://localhost:4000/products/herrajes/${encodeURIComponent(categoria)}/${encodeURIComponent(fileName)}`;
+};
+
+const HerrajesPage = () => {
+  const [herrajes, setHerrajes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [productoDestacado, setProductoDestacado] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const params = new URLSearchParams(location.search);
+  const nombreSeleccionado = params.get("nombre")?.toLowerCase() || "";
+
+  useEffect(() => {
+    const cargarHerrajes = async () => {
+      try {
+        const res = await getHerrajes();
+        const data = res.data?.herrajes || res.data?.data || res.data || [];
+        setHerrajes(data);
+
+        if (nombreSeleccionado) {
+          for (const cat of data) {
+            const prod = cat.productos.find(
+              (p) => p.nombre.toLowerCase() === nombreSeleccionado
+            );
+            if (prod) {
+              setProductoDestacado({ producto: prod, categoria: cat.categoria });
+              break;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("❌ Error al cargar herrajes:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarHerrajes();
+  }, [nombreSeleccionado]);
+
+  const seleccionarProducto = (producto, categoria) => {
+    navigate(`?nombre=${encodeURIComponent(producto.nombre)}`);
+    setProductoDestacado({ producto, categoria });
+  };
+
+  const cerrarModal = () => {
+    navigate(`/herrajes`);
+    setProductoDestacado(null);
+  };
+
+  const filtrar = (producto) => {
+    const termino = busqueda.toLowerCase();
+    return producto.nombre?.toLowerCase().includes(termino);
+  };
+
+  if (loading) return <Container>Cargando herrajes...</Container>;
+  if (error) return <Container>Error al cargar los datos.</Container>;
+  if (!herrajes.length) {
+    return <Container>No hay herrajes para mostrar.</Container>;
+  }
+
+  return (
+    <Container>
+      <TituloPrincipal>Herrajes</TituloPrincipal>
+
+      <Busqueda
+        type="text"
+        placeholder="Buscar herraje por nombre..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+
+      {herrajes.map((cat, i) => (
+        <div key={i}>
+          <CategoriaTitulo>{cat.categoria}</CategoriaTitulo>
+          <Grid>
+            {cat.productos.filter(filtrar).length === 0 ? (
+              <EmptyMsg>No hay productos en esta categoría.</EmptyMsg>
+            ) : (
+              cat.productos
+                .filter(filtrar)
+                .map((prod, j) => (
+                  <ProductoCard
+                    key={j}
+                    producto={prod}
+                    categoria={cat.categoria}
+                    onClick={() => seleccionarProducto(prod, cat.categoria)}
+                  />
+                ))
+            )}
+          </Grid>
+        </div>
+      ))}
+
+      {productoDestacado && (
+        <ModalOverlay>
+          <Modal>
+            <CloseButton onClick={cerrarModal}>×</CloseButton>
+            <ProductoDestacado
+              producto={productoDestacado.producto}
+              categoria={productoDestacado.categoria}
+              construirRutaImagen={(img, categoria) =>
+                construirRutaImagen(img, categoria)
+              }
+            />
+          </Modal>
+        </ModalOverlay>
+      )}
+    </Container>
+  );
+};
+
+const ProductoCard = ({ producto, categoria, onClick }) => {
+  const [imagenActiva] = useState(0);
+  const imagenes = Array.isArray(producto.imagenes) ? producto.imagenes : [];
+  const imagenSrc = construirRutaImagen(imagenes[imagenActiva], categoria);
+
+  return (
+    <Card onClick={onClick}>
+      {imagenSrc && <Imagen src={imagenSrc} alt={producto.nombre || "Sin nombre"} />}
+      <Nombre>{producto.nombre}</Nombre>
+    </Card>
+  );
+};
+
+export default HerrajesPage;
+
+// 🎨 Estilos
+const Container = styled.div`
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 1.5rem;
+  }
+`;
+
+const TituloPrincipal = styled.h1`
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #222;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+`;
+
+const CategoriaTitulo = styled.h2`
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.2rem;
+  }
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+`;
+
+const Busqueda = styled.input`
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+`;
+
+const Card = styled.div`
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+
+const Imagen = styled.img`
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+`;
+
+const Nombre = styled.h3`
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #333;
+`;
+
+const EmptyMsg = styled.p`
+  font-size: 0.95rem;
+  color: #999;
+  text-align: center;
+`;
+
+// Modal styles
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+`;
+
+const Modal = styled.div`
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    max-width: 90%;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\home.jsx:
+
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { breakpoints } from "@/styles/breakpoints";
+
+import {
+  getHerrajes,
+  getMelaminas,
+  getRevestimientosNormalizados,
+  API_BASE,
+} from "@/api/api";
+
+import Banner from "@/components/ui/Banner";
+import CardHome from "@/components/cards/CardHome";
+import Slider from "@/components/ui/Slider";
+import data from "@/data/pages/home";
+
+const PAGE_SIZE = 6;
+
+const Home = () => {
+  const [melaminasFull, setMelaminasFull] = useState([]);
+  const [melaminas, setMelaminas] = useState([]);
+  const [melaminasPage, setMelaminasPage] = useState(1);
+
+  const [herrajesFull, setHerrajesFull] = useState([]);
+  const [herrajes, setHerrajes] = useState([]);
+  const [herrajesPage, setHerrajesPage] = useState(1);
+
+  const [revestimientosFull, setRevestimientosFull] = useState([]);
+  const [revestimientos, setRevestimientos] = useState([]);
+  const [revestimientosPage, setRevestimientosPage] = useState(1);
+
+  useEffect(() => {
+    const cargarProductos = async () => {
+      try {
+        const [melRes, herRes, revRes] = await Promise.all([
+          getMelaminas(),
+          getHerrajes(),
+          getRevestimientosNormalizados(),
+        ]);
+
+        const mel = Array.isArray(melRes.data?.data) ? melRes.data.data : [];
+        const her = Array.isArray(herRes.data?.data) ? herRes.data.data : [];
+        const rev = Array.isArray(revRes.data) ? revRes.data : [];
+
+        setMelaminasFull(mel);
+        setHerrajesFull(her);
+        setRevestimientosFull(rev);
+
+        setMelaminas(mel.slice(0, PAGE_SIZE));
+        setHerrajes(her.slice(0, PAGE_SIZE));
+        setRevestimientos(rev.slice(0, PAGE_SIZE));
+      } catch (err) {
+        console.error("❌ Error al cargar productos:", err);
+      }
+    };
+
+    cargarProductos();
+  }, []);
+
+  const loadMore = (fullData, currentPage, setPage, setVisible) => {
+    const nextPage = currentPage + 1;
+    setPage(nextPage);
+    setVisible(fullData.slice(0, nextPage * PAGE_SIZE));
+  };
+
+  const handleLoadMoreHerrajes = () =>
+    loadMore(herrajesFull, herrajesPage, setHerrajesPage, setHerrajes);
+
+  const handleLoadMoreMelaminas = () =>
+    loadMore(melaminasFull, melaminasPage, setMelaminasPage, setMelaminas);
+
+  const handleLoadMoreRevestimientos = () =>
+    loadMore(
+      revestimientosFull,
+      revestimientosPage,
+      setRevestimientosPage,
+      setRevestimientos
+    );
+
+  const buildImagePath = (path, nombreImagen) =>
+    `${API_BASE.replace(
+      "/api",
+      ""
+    )}/products/revestimientos/${path}/${nombreImagen}`;
+
+  return (
+    <HomeSection>
+      <Banner />
+
+      <Section>
+        <SectionTitle>Herrajes</SectionTitle>
+        <Slider
+          titulo="Herrajes"
+          data={herrajes}
+          categoriaKey="categoria"
+          productosKey="productos"
+          onLoadMore={handleLoadMoreHerrajes}
+        />
+      </Section>
+
+      <Section>
+        <SectionTitle>Melaminas</SectionTitle>
+        <Slider
+          titulo="Melaminas"
+          data={melaminas}
+          categoriaKey="categoria"
+          productosKey="productos"
+          onLoadMore={handleLoadMoreMelaminas}
+        />
+      </Section>
+
+      <Section>
+        <SectionTitle>Revestimientos</SectionTitle>
+        <Slider
+          titulo="Revestimientos"
+          data={revestimientos}
+          categoriaKey="path"
+          productosKey="productos"
+          onLoadMore={handleLoadMoreRevestimientos}
+          buildImagePath={buildImagePath}
+        />
+      </Section>
+
+      <Section>
+        <SectionTitle>Explora nuestras secciones</SectionTitle>
+        <CardsGrid>
+          {Object.values(data.secciones).map((seccion) => (
+            <CardHome
+              key={seccion.id}
+              name={seccion.name}
+              image={seccion.image}
+              page={seccion.page}
+            />
+          ))}
+        </CardsGrid>
+      </Section>
+    </HomeSection>
+  );
+};
+
+export default Home;
+
+// 🎨 Estilos
+const HomeSection = styled.main`
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  & > section:last-child {
+    margin-bottom: 4rem;
+  }
+`;
+
+const Section = styled.section`
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 2rem 1rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 1.5rem 0.5rem;
+  }
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 2rem;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 1.75rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+`;
+
+const CardsGrid = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    gap: 1rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+`;
+
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\melaminas.jsx:
+
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getMelaminas, API_BASE } from "@/api/api.js";
+import ProductoDestacado from "@/components/ProductoDestacado.jsx";
+import { breakpoints } from "@/styles/breakpoints";
+
+const construirRutaImagen = (img) => {
+  if (!img) return "";
+  const tieneExtension = /\.[a-zA-Z0-9]{3,4}$/.test(img);
+  return `${API_BASE.replace("/api", "")}/products/melaminas/${img}${
+    tieneExtension ? "" : ".jpg"
+  }`;
+};
+
+const MelaminasPage = () => {
+  const [melaminas, setMelaminas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [productoDestacado, setProductoDestacado] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const params = new URLSearchParams(location.search);
+  const nombreSeleccionado = params.get("nombre")?.toLowerCase() || "";
+
+  useEffect(() => {
+    const cargarMelaminas = async () => {
+      try {
+        const res = await getMelaminas();
+        const mel = Array.isArray(res.data?.data) ? res.data.data : [];
+        setMelaminas(mel);
+
+        if (nombreSeleccionado) {
+          for (const cat of mel) {
+            const prod = cat.productos.find(
+              (p) => p.nombre.toLowerCase() === nombreSeleccionado
+            );
+            if (prod) {
+              setProductoDestacado(prod);
+              break;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("❌ Error al cargar melaminas:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    cargarMelaminas();
+  }, [nombreSeleccionado]);
+
+  const seleccionarProducto = (producto) => {
+    navigate(`?nombre=${encodeURIComponent(producto.nombre)}`);
+    setProductoDestacado(producto);
+  };
+
+  const cerrarModal = () => {
+    navigate(`/melaminas`);
+    setProductoDestacado(null);
+  };
+
+  const filtrar = (producto) => {
+    const termino = busqueda.toLowerCase();
+    return producto.nombre?.toLowerCase().includes(termino);
+  };
+
+  if (loading) return <Container>Cargando melaminas...</Container>;
+  if (error) return <Container>Error al cargar los datos.</Container>;
+  if (!melaminas.length) {
+    return <Container>No hay melaminas para mostrar.</Container>;
+  }
+
+  return (
+    <Container>
+      <TituloPrincipal>Melaminas</TituloPrincipal>
+
+      <Busqueda
+        type="text"
+        placeholder="Buscar melamina por nombre..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+
+      {melaminas.map((cat, i) => (
+        <div key={i}>
+          <CategoriaTitulo>{cat.categoria}</CategoriaTitulo>
+          <Grid>
+            {(cat.productos || []).filter(filtrar).length === 0 ? (
+              <EmptyMsg>No hay productos en esta categoría.</EmptyMsg>
+            ) : (
+              cat.productos
+                .filter(filtrar)
+                .map((prod, j) => (
+                  <ProductoCard
+                    key={j}
+                    producto={prod}
+                    onClick={() => seleccionarProducto(prod)}
+                  />
+                ))
+            )}
+          </Grid>
+        </div>
+      ))}
+
+      {productoDestacado && (
+        <ModalOverlay>
+          <Modal>
+            <CloseButton onClick={cerrarModal}>×</CloseButton>
+            <ProductoDestacado
+              producto={productoDestacado}
+              construirRutaImagen={construirRutaImagen}
+            />
+          </Modal>
+        </ModalOverlay>
+      )}
+    </Container>
+  );
+};
+
+const ProductoCard = ({ producto, onClick }) => {
+  const [imagenActiva] = useState(0);
+  const imagenes = Array.isArray(producto.imagenes) ? producto.imagenes : [];
+  const imagenSrc = construirRutaImagen(imagenes[imagenActiva]);
+
+  return (
+    <Card onClick={onClick}>
+      {imagenSrc && (
+        <Imagen src={imagenSrc} alt={producto.nombre || "Sin nombre"} />
+      )}
+      <Nombre>{producto.nombre}</Nombre>
+    </Card>
+  );
+};
+
+export default MelaminasPage;
+
+// 🎨 Estilos
+const Container = styled.div`
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 1.5rem;
+  }
+`;
+
+const TituloPrincipal = styled.h1`
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #222;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+`;
+
+const CategoriaTitulo = styled.h2`
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.2rem;
+  }
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+`;
+
+const Busqueda = styled.input`
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+`;
+
+const Card = styled.div`
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+
+const Imagen = styled.img`
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+`;
+
+const Nombre = styled.h3`
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #333;
+`;
+
+const EmptyMsg = styled.p`
+  font-size: 0.95rem;
+  color: #999;
+  text-align: center;
+`;
+
+// Modal styles
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+`;
+
+const Modal = styled.div`
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    max-width: 90%;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\revestimientos.jsx:
+
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getRevestimientosNormalizados, API_BASE } from "@/api/api.js";
+import ProductoDestacado from "@/components/ProductoDestacado.jsx";
+import { breakpoints } from "@/styles/breakpoints";
+
+const construirRutaImagen = (path, nombreImagen) => {
+  return `${API_BASE.replace("/api", "")}/products/revestimientos/${path}/${nombreImagen}`;
+};
+
+const RevestimientosPage = () => {
+  const [revestimientos, setRevestimientos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [productoDestacado, setProductoDestacado] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const params = new URLSearchParams(location.search);
+  const nombreSeleccionado = params.get("nombre")?.toLowerCase() || "";
+
+  useEffect(() => {
+    const cargarRevestimientos = async () => {
+      try {
+        const res = await getRevestimientosNormalizados();
+        const data = Array.isArray(res.data) ? res.data : [];
+        setRevestimientos(data);
+
+        if (nombreSeleccionado) {
+          for (const cat of data) {
+            const prod = cat.productos.find(
+              (p) => p.nombre.toLowerCase() === nombreSeleccionado
+            );
+            if (prod) {
+              setProductoDestacado({ producto: prod, path: cat.path });
+              break;
+            }
+          }
+        }
+      } catch (err) {
+        console.error("❌ Error al cargar revestimientos:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    cargarRevestimientos();
+  }, [nombreSeleccionado]);
+
+  const seleccionarProducto = (producto, path) => {
+    navigate(`?nombre=${encodeURIComponent(producto.nombre)}`);
+    setProductoDestacado({ producto, path });
+  };
+
+  const cerrarModal = () => {
+    navigate(`/revestimientos`);
+    setProductoDestacado(null);
+  };
+
+  const filtrar = (producto) => {
+    const termino = busqueda.toLowerCase();
+    return producto.nombre?.toLowerCase().includes(termino);
+  };
+
+  if (loading) return <Container>Cargando revestimientos...</Container>;
+  if (error) return <Container>Error al cargar los datos.</Container>;
+  if (!revestimientos.length) {
+    return <Container>No hay revestimientos para mostrar.</Container>;
+  }
+
+  return (
+    <Container>
+      <TituloPrincipal>Revestimientos</TituloPrincipal>
+
+      <Busqueda
+        type="text"
+        placeholder="Buscar revestimiento por nombre..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+
+      {revestimientos.map((cat, i) => (
+        <div key={i}>
+          <CategoriaTitulo>{cat.path.replace(/-/g, " ")}</CategoriaTitulo>
+          <Grid>
+            {cat.productos.filter(filtrar).length === 0 ? (
+              <EmptyMsg>No hay productos en esta categoría.</EmptyMsg>
+            ) : (
+              cat.productos
+                .filter(filtrar)
+                .map((prod, j) => (
+                  <ProductoCard
+                    key={j}
+                    producto={prod}
+                    path={cat.path}
+                    onClick={() => seleccionarProducto(prod, cat.path)}
+                  />
+                ))
+            )}
+          </Grid>
+        </div>
+      ))}
+
+      {productoDestacado && (
+        <ModalOverlay>
+          <Modal>
+            <CloseButton onClick={cerrarModal}>×</CloseButton>
+            <ProductoDestacado
+              producto={productoDestacado.producto}
+              path={productoDestacado.path}
+              construirRutaImagen={(img, path) =>
+                construirRutaImagen(path, img)
+              }
+            />
+          </Modal>
+        </ModalOverlay>
+      )}
+    </Container>
+  );
+};
+
+const ProductoCard = ({ producto, path, onClick }) => {
+  const [imagenActiva] = useState(0);
+  const imagenes = Array.isArray(producto.imagenes) ? producto.imagenes : [];
+  const imagenSrc = construirRutaImagen(path, imagenes[imagenActiva]);
+
+  return (
+    <Card onClick={onClick}>
+      {imagenSrc && <Imagen src={imagenSrc} alt={producto.nombre || "Sin nombre"} />}
+      <Nombre>{producto.nombre}</Nombre>
+    </Card>
+  );
+};
+
+export default RevestimientosPage;
+
+// 🎨 Estilos
+const Container = styled.div`
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 1.5rem;
+  }
+`;
+
+const TituloPrincipal = styled.h1`
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #222;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+`;
+
+const CategoriaTitulo = styled.h2`
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 1.2rem;
+  }
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+`;
+
+const Busqueda = styled.input`
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+`;
+
+const Card = styled.div`
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;
+
+const Imagen = styled.img`
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+`;
+
+const Nombre = styled.h3`
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #333;
+`;
+
+const EmptyMsg = styled.p`
+  font-size: 0.95rem;
+  color: #999;
+  text-align: center;
+`;
+
+// Modal styles
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+`;
+
+const Modal = styled.div`
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    max-width: 90%;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\simulador.jsx:
+
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { getMelaminas, API_BASE } from "@/api/api.js";
+import { imagenesSimulador } from "@/data/image/gestorImage";
+import { breakpoints } from "@/styles/breakpoints";
+
+const construirRutaImagen = (img) => {
+  if (!img) return '';
+  const tieneExtension = /\.[a-zA-Z0-9]{3,4}$/.test(img);
+  return `${API_BASE.replace('/api', '')}/products/melaminas/${img}${tieneExtension ? '' : '.jpg'}`;
+};
+
+const Simulador = () => {
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const [busqueda, setBusqueda] = useState("");
+  const [melaminaSeleccionada, setMelaminaSeleccionada] = useState(null);
+  const [muebleSeleccionado, setMuebleSeleccionado] = useState("simulador-1");
+
+  useEffect(() => {
+    const cargarMelaminas = async () => {
+      try {
+        const res = await getMelaminas();
+        const melaminas = Array.isArray(res.data?.data) ? res.data.data : [];
+
+        const productosPlanos = melaminas.flatMap((cat) =>
+          (cat.productos || []).map((prod) => ({
+            ...prod,
+            categoria: cat.categoria,
+          }))
+        );
+
+        setProductos(productosPlanos);
+      } catch (err) {
+        console.error("❌ Error al cargar melaminas en simulador:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarMelaminas();
+  }, []);
+
+  const productosFiltrados = productos.filter((item) =>
+    item.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  const imagenFondo =
+    melaminaSeleccionada?.imagenes?.[0]
+      ? construirRutaImagen(melaminaSeleccionada.imagenes[0])
+      : null;
+
+  const imagenMueble = imagenesSimulador[muebleSeleccionado];
+
+  if (loading) return <SimuladorArea>Cargando melaminas...</SimuladorArea>;
+  if (error) return <SimuladorArea>Error al cargar melaminas.</SimuladorArea>;
+
+  return (
+    <MainContainer>
+      <Menu>
+        <Busqueda
+          placeholder="Buscar melamina..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+
+        {melaminaSeleccionada && (
+          <QuitarBoton
+            onClick={() => {
+              setMelaminaSeleccionada(null);
+              setBusqueda("");
+            }}
+          >
+            ✕ Quitar melamina
+          </QuitarBoton>
+        )}
+
+        <TituloMenu>Melaminas</TituloMenu>
+        {productosFiltrados.map((producto) => (
+          <BotonMenu
+            key={producto.codigo}
+            onClick={() => setMelaminaSeleccionada(producto)}
+            $activo={melaminaSeleccionada?.codigo === producto.codigo}
+          >
+            {producto.nombre}
+          </BotonMenu>
+        ))}
+
+        <TituloMenu>Muebles</TituloMenu>
+        {["simulador-1", "simulador-2"].map((key, i) => (
+          <BotonMenu
+            key={key}
+            onClick={() => setMuebleSeleccionado(key)}
+            $activo={muebleSeleccionado === key}
+          >
+            Mueble {i + 1}
+          </BotonMenu>
+        ))}
+      </Menu>
+
+      <SimuladorArea>
+        <SimuladorContenido>
+          {imagenFondo && (
+            <MelaminaWrapper $mueble={muebleSeleccionado}>
+              <MelaminaFondo
+                src={imagenFondo}
+                alt="Fondo melamina"
+                loading="lazy"
+              />
+            </MelaminaWrapper>
+          )}
+          {imagenMueble && <ImagenMueble src={imagenMueble} alt="Mueble" />}
+          {!imagenFondo && (
+            <Instruccion>Seleccioná una melamina para ver el simulador</Instruccion>
+          )}
+        </SimuladorContenido>
+      </SimuladorArea>
+    </MainContainer>
+  );
+};
+
+export default Simulador;
+
+// 🎨 estilos
+
+const MainContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  width: 100%;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
+const Menu = styled.aside`
+  width: 250px;
+  background: #f1f1f1;
+  padding: 1rem;
+  overflow-y: auto;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid #ddd;
+  }
+`;
+
+const TituloMenu = styled.h2`
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+  color: #444;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.25rem;
+`;
+
+const BotonMenu = styled.button`
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.25rem;
+  background-color: ${({ $activo }) => ($activo ? "#d0eaff" : "white")};
+  color: ${({ $activo }) => ($activo ? "#004080" : "#333")};
+  border: 1px solid ${({ $activo }) => ($activo ? "#007acc" : "#ccc")};
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+`;
+
+const QuitarBoton = styled.button`
+  width: 100%;
+  margin: 0.8rem 0 0.6rem;
+  padding: 0.5rem;
+  background-color: #ffdddd;
+  color: #b30000;
+  border: 1px solid #b30000;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #ffbbbb;
+  }
+`;
+
+const Busqueda = styled.input`
+  padding: 0.6rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+`;
+
+const SimuladorArea = styled.main`
+  flex: 1;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+`;
+
+const SimuladorContenido = styled.div`
+  position: relative;
+  width: 90%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MelaminaWrapper = styled.div`
+  position: absolute;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+
+  ${({ $mueble }) => $mueble === "simulador-1" && `
+    width: 73%;
+  `}
+  ${({ $mueble }) => $mueble === "simulador-2" && `
+    width: 100%;
+  `}
+`;
+
+const MelaminaFondo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(1.05);
+`;
+
+const ImagenMueble = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+`;
+
+const Instruccion = styled.p`
+  position: relative;
+  z-index: 3;
+  font-size: 1.1rem;
+  color: #555;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+`;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\pages\vinilos.jsx:
+
+
+const vinilos = () => {
+  return (
+    <div>viniloMueblesyDeco</div>
+  )
+}
+export default vinilos;
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\styles\breakpoints.js:
+
+export const breakpoints = {
+  mobile: "480px",
+  tablet: "768px",
+  desktop: "1200px",
+};
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\styles\globalStyles.js:
+
+// // \src\styles\GlobalStyles.js:
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyles = createGlobalStyle`
+
+/* --------------> Reset básico <-------------- */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none;
+
+  };
+
+`;
+
+export default GlobalStyles;
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\App.jsx:
+
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+// Estilos Globales
+import GlobalStyles   from "@/styles/globalStyles";
+
+//Paginas
+import Home           from "@/pages/home.jsx";
+import Melaminas      from "@/pages/melaminas.jsx";
+import Revestimientos from "@/pages/revestimientos.jsx"; 
+import Vinilos        from "@/pages/vinilos.jsx";
+import Herrajes       from "@/pages/herrajes.jsx";
+import Simulador      from "@/pages/simulador.jsx";
+import Contactos      from "@/pages/contactos.jsx";
+
+// Components - Políticas
+import Cookies        from "@/components/policies/Cookies.jsx";
+import Privacidad     from "@/components/policies/Privacidad.jsx";
+import Terminos       from "@/components/policies/Terminos.jsx";
+
+// Componentes UI
+
+import Header         from "@/components/layout/Header.jsx";
+import Cursor         from "@/data/components/cursor.jsx";
+import Footer         from "@/components/layout/Footer.jsx";
+
+const App = () => {
+  return (
+    <div className="App">
+      <GlobalStyles />
+      <Cursor />
+      <Router>
+        <Header /> 
+        <Routes>
+          <Route path="/"                   element={<Home />} />
+          <Route path="/melaminas"          element={<Melaminas />} />
+          <Route path="/herrajes"           element={<Herrajes />} />
+          <Route path="/revestimientos"     element={<Revestimientos />} />
+          <Route path="/simulador"          element={<Simulador />} />
+          <Route path="/vinilos"            element={<Vinilos />} />
+          <Route path="/contactos"           element={<Contactos />} />
+          <Route path="/cookies"            element={<Cookies />} />
+          <Route path="/terminos"           element={<Terminos />} />
+          <Route path="/privacidad"         element={<Privacidad />} /> 
+          <Route path="*"                   element={<div>Página no encontrada</div>} />
+        </Routes>
+        <Footer />
+      </Router>
+    </div>
+  );
+};
+
+export default App;
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\src\main.jsx:
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+// Punto de entrada principal de la aplicación
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\vercel.json:
+
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite"
+}
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\.gitignore:
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+faplac
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\desktop.ini:
+
+[.ShellClassInfo]
+IconResource=E:\iconos\megaM.ico,0
+[ViewState]
+Mode=
+Vid=
+FolderType=Generic
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\eslint.config.js:
+
+import js from '@eslint/js'
+import globals from 'globals'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+
+export default [
+  { ignores: ['dist'] },
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    settings: { react: { version: '18.2' } },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+      'react/jsx-no-target-blank': 'off',
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  },
+]
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\package.json:
+
+{
+  "name": "megamadera",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@fontsource/montserrat": "^5.1.0",
+    "@fontsource/playfair-display": "^5.1.0",
+    "axios": "^1.10.0",
+    "bootstrap": "^5.3.3",
+    "lucide-react": "^0.513.0",
+    "normalize.css": "^8.0.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.5",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.3.0",
+    "react-router-dom": "^6.28.0",
+    "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.9.0",
+    "vite": "^5.4.8"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  }
+}
+
+
+
+
+
+// Ruta: D:\Empresas\Programacion\Proyectos\MegaMadera\Frontend\vite.config.js:
+
+// vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  // OPCIONAL: solo si querés evitar CORS usando proxy (no necesario por ahora)
+  // server: {
+  //   proxy: {
+  //     '/api': 'http://localhost:4000',
+  //     '/products': 'http://localhost:4000',
+  //   }
+  // }
+});
+
+
+
+
+

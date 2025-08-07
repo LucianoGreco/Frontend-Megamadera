@@ -16,11 +16,9 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
 
   const buildImageUrl = (imgPath) => {
     const base = import.meta.env.VITE_PUBLIC_BASE || "http://localhost:4000";
-
     if (!imgPath.includes("/")) {
       return `${base}/products/${producto.ruta}/${imgPath}`;
     }
-
     return `${base}/products/${imgPath}`;
   };
 
@@ -44,18 +42,19 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
           {producto && (
             <WhatsAppButton
               onClick={() => {
-                const numero = "5492064418837";
+                const numero = "5492064331727";
                 const imagen = buildImageUrl(producto.imagenes?.[0] ?? "");
-                const mensaje = `Me interesa este producto:\n` +
-                  `codigo: ${producto.codigo ?? "sin código"}\n` +
-                  `nombre: ${producto.nombre ?? "sin nombre"}\n` +
-                  `imagen: ${imagen}\n\n` +
-                  `Espero su respuesta`;
+                const mensaje =
+                  `👋 Mirá este producto:\n\n` +
+                  `🆔 Código: ${producto.codigo ?? "N/D"}\n` +
+                  `📦 Nombre: ${producto.nombre ?? "N/D"}\n` +
+                  `🖼 Imagen: ${imagen}`;
+
                 const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
                 window.open(url, "_blank");
               }}
             >
-              Contactar por WhatsApp
+              Compartir por WhatsApp
             </WhatsAppButton>
           )}
         </Info>
@@ -80,6 +79,8 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
 
 export default ProductoDestacado;
 
+// === ESTILOS ===
+
 const Destacado = styled.section`
   margin: 1rem auto;
   padding: 1rem;
@@ -88,17 +89,6 @@ const Destacado = styled.section`
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   max-width: 800px;
-`;
-
-const BackButton = styled.button`
-  margin-bottom: 1rem;
-  background: #ddd;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  &:hover {
-    background: #ccc;
-  }
 `;
 
 const Titulo = styled.h2`

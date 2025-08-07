@@ -11,7 +11,6 @@ const Slider = ({ title, data, categoria }) => {
 
   const BASE_URL = import.meta.env.VITE_PUBLIC_BASE || "http://localhost:4000";
 
-
   useEffect(() => {
     const checkScroll = () => {
       if (!containerRef.current) return;

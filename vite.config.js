@@ -10,11 +10,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // OPCIONAL: solo si querés evitar CORS usando proxy (no necesario por ahora)
-  // server: {
-  //   proxy: {
-  //     '/api': 'http://localhost:4000',
-  //     '/products': 'http://localhost:4000',
-  //   }
-  // }
+
 });

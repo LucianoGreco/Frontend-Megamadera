@@ -42,7 +42,7 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
           {producto && (
             <WhatsAppButton
               onClick={() => {
-                const numero = "5492064331727";
+                const numero = "5492604331727";
                 const imagen = buildImageUrl(producto.imagenes?.[0] ?? "");
                 const mensaje =
                   `👋 Mirá este producto:\n\n` +

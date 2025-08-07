@@ -1,6 +1,6 @@
 // URL base de la API. Se toma del .env, o usa localhost por defecto.
-export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000/api';
-// export const API_BASE = import.meta.env.VITE_API_BASE || 'https://backend-megamadera.onrender.com/api';
+// export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000/api';
+export const API_BASE = import.meta.env.VITE_API_BASE || 'https://backend-megamadera.onrender.com/api';
 
 
 

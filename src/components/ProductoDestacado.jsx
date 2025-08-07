@@ -41,25 +41,25 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
           <Nombre>{producto.nombre}</Nombre>
           <Descripcion>{producto.descripcion || "Sin descripción"}</Descripcion>
 
-   {producto && (
-  <WhatsAppButton
-    onClick={() => {
-      const numero = "5492064331727";
-      const imagen = buildImageUrl(producto.imagenes?.[0] ?? "");
-      const mensaje = `Me interesa este producto:\n` +
-        `codigo: ${producto.codigo ?? "sin código"}\n` +
-        `nombre: ${producto.nombre ?? "sin nombre"}\n` +
-        `imagen: ${imagen}\n\n` +
-        `Espero su respuesta`;
-      const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-      window.open(url, "_blank");
-    }}
-  >
-    Contactar por WhatsApp
-  </WhatsAppButton>
-)}
-
+          {producto && (
+            <WhatsAppButton
+              onClick={() => {
+                const numero = "5492064331727";
+                const imagen = buildImageUrl(producto.imagenes?.[0] ?? "");
+                const mensaje = `Me interesa este producto:\n` +
+                  `codigo: ${producto.codigo ?? "sin código"}\n` +
+                  `nombre: ${producto.nombre ?? "sin nombre"}\n` +
+                  `imagen: ${imagen}\n\n` +
+                  `Espero su respuesta`;
+                const url = `https://api.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
+                window.open(url, "_blank");
+              }}
+            >
+              Contactar por WhatsApp
+            </WhatsAppButton>
+          )}
         </Info>
+
         {imagenes.length > 1 && (
           <Miniaturas>
             {imagenes.map((img, idx) => (
@@ -155,7 +155,6 @@ const Miniatura = styled.img`
     border-color: #333;
   }
 `;
-
 
 const WhatsAppButton = styled.button`
   background-color: #25D366;

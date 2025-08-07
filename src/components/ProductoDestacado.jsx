@@ -16,7 +16,8 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
 
   const buildImageUrl = (imgPath) => {
     // const base = import.meta.env.VITE_PUBLIC_BASE || "http://localhost:4000";
-    const base = import.meta.env.VITE_PUBLIC_BASE || "https://backend-megamadera.onrender.com/";
+    const base = import.meta.env.VITE_PUBLIC_BASE || "https://backend-megamadera.onrender.com";
+    
     if (!imgPath.includes("/")) {
       return `${base}/products/${producto.ruta}/${imgPath}`;
     }
@@ -46,7 +47,7 @@ const ProductoDestacado = ({ producto: propProducto, onBack }) => {
                 const numero = "5492604331727";
                 const imagen = buildImageUrl(producto.imagenes?.[0] ?? "");
                 const mensaje =
-                  `👋 Mirá este producto:\n\n` +
+                  `Solicito informacion:\n\n` +
                   `🆔 Código: ${producto.codigo ?? "N/D"}\n` +
                   `📦 Nombre: ${producto.nombre ?? "N/D"}\n` +
                   `🖼 Imagen: ${imagen}`;
